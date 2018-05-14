@@ -314,7 +314,7 @@ EMCC_COMMON_ARGS = \
 	-s ALLOW_MEMORY_GROWTH=1 \
 	-s BINARYEN=1 \
 	-s WASM=1 \
-	-O2 --memory-init-file 0 \
+	-O3 --memory-init-file 0 \
 	--pre-js $(PRE_JS) \
 	-o $@
 

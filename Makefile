@@ -6,6 +6,7 @@ PRE_JS = build/pre.js
 POST_JS_SYNC = build/post-sync.js
 POST_JS_WORKER = build/post-worker.js
 
+COMMON_BITSTREAM_FILTERS = h264_mp4toannexb
 COMMON_FILTERS = aresample scale scale2ref crop overlay concat anullsrc
 COMMON_DEMUXERS = matroska ogg avi mov flv mpegps image2 mp3 concat
 COMMON_DECODERS = \
@@ -254,6 +255,7 @@ FFMPEG_COMMON_ARGS = \
 	$(addprefix --enable-demuxer=,$(COMMON_DEMUXERS)) \
 	--enable-protocol=file \
 	$(addprefix --enable-filter=,$(COMMON_FILTERS)) \
+	$(addprefix --enable-bsf=,$(COMMON_BITSTREAM_FILTERS)) \
 	--disable-bzlib \
 	--disable-iconv \
 	--disable-libxcb \

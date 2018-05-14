@@ -5,6 +5,8 @@
 PRE_JS = build/pre.js
 POST_JS_SYNC = build/post-sync.js
 POST_JS_WORKER = build/post-worker.js
+# TODO(picitujeromanov) Add lavfi anullsrc input --enable-indev=NAME  enable input device NAME
+# TODO(picitujeromanov) figure out why png overlay doesnt work
 
 COMMON_BITSTREAM_FILTERS = h264_mp4toannexb
 COMMON_FILTERS = aresample scale scale2ref crop overlay concat anullsrc

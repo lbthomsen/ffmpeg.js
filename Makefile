@@ -269,6 +269,7 @@ FFMPEG_COMMON_ARGS = \
 
 build/ffmpeg-webm/ffmpeg.bc: $(WEBM_SHARED_DEPS)
 	cd build/ffmpeg-webm && \
+	git reset --hard && \
 	patch -p1 < ../ffmpeg-disable-arc4random.patch && \
 	patch -p1 < ../ffmpeg-default-font.patch && \
 	patch -p1 < ../ffmpeg-disable-monotonic.patch && \
@@ -288,6 +289,7 @@ build/ffmpeg-webm/ffmpeg.bc: $(WEBM_SHARED_DEPS)
 
 build/ffmpeg-mp4/ffmpeg.bc: $(MP4_SHARED_DEPS)
 	cd build/ffmpeg-mp4 && \
+	git reset --hard && \
 	patch -p1 < ../ffmpeg-disable-arc4random.patch && \
 	patch -p1 < ../ffmpeg-disable-monotonic.patch && \
 	EM_PKG_CONFIG_PATH=$(FFMPEG_MP4_PC_PATH) emconfigure ./configure \
@@ -308,12 +310,13 @@ build/ffmpeg-mp4/ffmpeg.bc: $(MP4_SHARED_DEPS)
 # for simple tests and 32M tends to run slower than 64M.
 EMCC_COMMON_ARGS = \
 	--closure 1 \
+	-s TOTAL_MEMORY=1610612736 \
+	-s ALLOW_MEMORY_GROWTH=1 \
+	-s AGGRESSIVE_VARIABLE_ELIMINATION=1 \
     -s OUTLINING_LIMIT=20000 \
 	-s BINARYEN=1 \
 	-s WASM=1 \
-	-s ALLOW_MEMORY_GROWTH=1 \
-	-s AGGRESSIVE_VARIABLE_ELIMINATION=1 \
-	-O2 --memory-init-file 1 \
+	-O2 --memory-init-file 0 \
 	--pre-js $(PRE_JS) \
 	-o $@
 

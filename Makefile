@@ -5,8 +5,11 @@
 PRE_JS = build/pre.js
 POST_JS_SYNC = build/post-sync.js
 POST_JS_WORKER = build/post-worker.js
+# TODO(picitujeromanov) Add lavfi anullsrc input --enable-indev=NAME  enable input device NAME
+# TODO(picitujeromanov) figure out why png overlay doesnt work
 
-COMMON_FILTERS = aresample scale crop overlay
+COMMON_BITSTREAM_FILTERS = h264_mp4toannexb
+COMMON_FILTERS = aresample scale scale2ref crop overlay concat anullsrc
 COMMON_DEMUXERS = matroska ogg avi mov flv mpegps image2 mp3 concat
 COMMON_DECODERS = \
 	vp8 vp9 theora \
@@ -34,8 +37,8 @@ WEBM_SHARED_DEPS = \
 	build/opus/dist/lib/libopus.so \
 	build/libvpx/dist/lib/libvpx.so
 
-MP4_MUXERS = mp4 mp3 null
-MP4_ENCODERS = libx264 libmp3lame aac
+MP4_MUXERS = mp4 mp3 null image2
+MP4_ENCODERS = libx264 libmp3lame aac mjpeg
 FFMPEG_MP4_BC = build/ffmpeg-mp4/ffmpeg.bc
 FFMPEG_MP4_PC_PATH = ../x264/dist/lib/pkgconfig
 MP4_SHARED_DEPS = \
@@ -254,6 +257,7 @@ FFMPEG_COMMON_ARGS = \
 	$(addprefix --enable-demuxer=,$(COMMON_DEMUXERS)) \
 	--enable-protocol=file \
 	$(addprefix --enable-filter=,$(COMMON_FILTERS)) \
+	$(addprefix --enable-bsf=,$(COMMON_BITSTREAM_FILTERS)) \
 	--disable-bzlib \
 	--disable-iconv \
 	--disable-libxcb \
@@ -306,9 +310,13 @@ build/ffmpeg-mp4/ffmpeg.bc: $(MP4_SHARED_DEPS)
 # for simple tests and 32M tends to run slower than 64M.
 EMCC_COMMON_ARGS = \
 	--closure 1 \
-	-s TOTAL_MEMORY=67108864 \
-	-s OUTLINING_LIMIT=20000 \
-	-O3 --memory-init-file 0 \
+	-s TOTAL_MEMORY=1073741824 \
+	-s ALLOW_MEMORY_GROWTH=1 \
+	-s AGGRESSIVE_VARIABLE_ELIMINATION=1 \
+    -s OUTLINING_LIMIT=20000 \
+	-s BINARYEN=1 \
+	-s WASM=1 \
+	-O2 --memory-init-file 0 \
 	--pre-js $(PRE_JS) \
 	-o $@
 

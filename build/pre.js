@@ -35,6 +35,7 @@ function __ffmpegjs(__ffmpegjs_opts) {
         ABORT = true;
         EXITSTATUS = status;
         STACKTOP = initialStackTop;
+        //STACKTOP = undefined;
         exitRuntime();
         if (Module["onExit"]) Module["onExit"](status);
         throw new ExitStatus(status);
